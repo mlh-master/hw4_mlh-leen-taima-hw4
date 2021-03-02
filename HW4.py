@@ -195,7 +195,7 @@ history = model_relu.fit(x_train, BaseY_train,
           validation_data=(x_val, BaseY_val))
 
 loss_and_metrics = model_relu.evaluate(x_test, Y_test)
-print(loss_and_metrics)
+print('test loss, test acc:', loss_and_metrics)
 #----------------------------------------------------------------------------------------
 
 
@@ -270,7 +270,7 @@ history_2_25 = new_a_model.fit(x_train, BaseY_train,
           validation_data=(x_val, BaseY_val))
 
 loss_and_metrics_2_25 = new_a_model.evaluate(x_test, Y_test)
-print(loss_and_metrics_2_25)
+print('test loss, test acc:', loss_and_metrics_2_25)
 
 #-----------------------------------------------------------------------------------------
 
@@ -301,7 +301,7 @@ history_2_40 = new_a_model.fit(x_train, BaseY_train,
           validation_data=(x_val, BaseY_val))
 
 loss_and_metrics_2_40 = new_a_model.evaluate(x_test, Y_test)
-print(loss_and_metrics_2_40)
+print('test loss, test acc:', loss_and_metrics_2_40)
 #-----------------------------------------------------------------------------------------
 
 
@@ -356,7 +356,7 @@ history_mini = model_relu.fit(x_train, BaseY_train,
           validation_data=(x_val, BaseY_val))
 
 loss_and_metrics_mini = model_relu.evaluate(x_test, Y_test)
-print(loss_and_metrics_mini)
+print('test loss, test acc:', loss_and_metrics_mini)
 #----------------------------------------------------------------------------------------
 
 
@@ -413,7 +413,7 @@ history_new_mini = new_a_model.fit(x_train, BaseY_train,
           validation_data=(x_val, BaseY_val))
 
 loss_and_metrics_new_mini = new_a_model.evaluate(x_test, Y_test)
-print(loss_and_metrics_new_mini)
+print('test loss, test acc:', loss_and_metrics_new_mini)
 #----------------------------------------------------------------------------------------
 
 
@@ -506,8 +506,8 @@ AdamOpt = Adam(lr=learn_rate,decay=decay)
 NNet.compile(optimizer=AdamOpt, metrics=['acc'], loss='categorical_crossentropy')
 
 #Saving checkpoints during training:
-Checkpath = os.getcwd()
-Checkp = ModelCheckpoint(Checkpath, monitor='val_acc', verbose=1, save_best_only=True, save_weights_only=True, save_freq=1)
+# Checkpath = os.getcwd()
+# Checkp = ModelCheckpoint(Checkpath, monitor='val_acc', verbose=1, save_best_only=True, save_weights_only=True, save_freq=1)
 
 
 # In[ ]:
@@ -543,9 +543,52 @@ print('test loss, test acc:', results)
 
 
 #--------------------------Impelment your code here:-------------------------------------
+def get_net_new(input_shape,drop,dropRate,reg,num_fil):
+    #Defining the network architecture:
+    model = Sequential()
+    model.add(Permute((1,2,3),input_shape = input_shape))
+    model.add(Conv2D(filters=num_fil[0], kernel_size=(3,3), padding='same', activation='relu',name='Conv2D_1',kernel_regularizer=regularizers.l2(reg)))
+    if drop:
+        model.add(Dropout(rate=dropRate))
+    model.add(BatchNormalization(axis=1))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Conv2D(filters=num_fil[1], kernel_size=(3,3), padding='same', activation='relu',name='Conv2D_2',kernel_regularizer=regularizers.l2(reg)))
+    if drop:
+        model.add(Dropout(rate=dropRate))
+    model.add(BatchNormalization(axis=1))
+    model.add(Conv2D(filters=num_fil[2], kernel_size=(3,3), padding='same', activation='relu',name='Conv2D_3',kernel_regularizer=regularizers.l2(reg)))
+    if drop:
+        model.add(Dropout(rate=dropRate))
+    model.add(BatchNormalization(axis=1))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Conv2D(filters=num_fil[3], kernel_size=(3,3), padding='same', activation='relu',name='Conv2D_4',kernel_regularizer=regularizers.l2(reg)))
+    if drop:
+        model.add(Dropout(rate=dropRate))
+    model.add(BatchNormalization(axis=1))
+    model.add(Conv2D(filters=num_fil[4], kernel_size=(3,3), padding='same', activation='relu',name='Conv2D_5',kernel_regularizer=regularizers.l2(reg)))
+    if drop:
+        model.add(Dropout(rate=dropRate))
+    model.add(BatchNormalization(axis=1))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Flatten())
+    #Fully connected network tail:
+    model.add(Dense(512, activation='elu',name='FCN_1'))
+    if drop:
+        model.add(Dropout(rate=dropRate))
+    model.add(Dense(128, activation='elu',name='FCN_2'))
+    model.add(Dense(4, activation= 'softmax',name='FCN_3'))
+    model.summary()
+    return model
 
+NNet_new = get_net_new(input_shape,drop,dropRate,reg,num_fil=[32, 64, 64, 128, 128])
+NNet_new.compile(optimizer=AdamOpt, metrics=['acc'], loss='categorical_crossentropy')
+
+#Preforming the training by using fit
+h_new = NNet_new.fit(x=BaseX_train, y=BaseY_train, batch_size=batch_size, epochs=epochs, verbose=1, validation_split=0, validation_data = (BaseX_val, BaseY_val), shuffle=True)
+
+results_new = NNet_new.evaluate(X_test,Y_test)
+print('test loss, test acc:', results_new)
 #----------------------------------------------------------------------------------------
 
 
 # That's all folks! See you :)
-s
