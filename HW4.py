@@ -152,10 +152,10 @@ model_relu = Sequential()
 model_relu.add(Dense(300, input_shape=(1024,), kernel_initializer=initializer))
 model_relu.add(Activation('relu', name='Relu_1'))
 
-model_relu.add(Dense(150))
+model_relu.add(Dense(150, kernel_initializer=initializer))
 model_relu.add(Activation('relu', name='Relu_2'))
 
-model_relu.add(Dense(4))
+model_relu.add(Dense(4, kernel_initializer=initializer))
 model_relu.add(Activation('softmax'))
 #----------------------------------------------------------------------------------------
 
@@ -216,10 +216,10 @@ new_a_model = Sequential()
 new_a_model.add(Dense(300, input_shape=(1024,), kernel_initializer=initializer))
 new_a_model.add(LeakyReLU())
 
-new_a_model.add(Dense(150))
+new_a_model.add(Dense(150, kernel_initializer=initializer))
 new_a_model.add(LeakyReLU())
 
-new_a_model.add(Dense(4))
+new_a_model.add(Dense(4, kernel_initializer=initializer))
 new_a_model.add(Activation('softmax'))
 #----------------------------------------------------------------------------------------
 
@@ -327,10 +327,10 @@ model_relu = Sequential()
 model_relu.add(Dense(300, input_shape=(1024,), kernel_initializer=initializer))
 model_relu.add(Activation('relu', name='Relu_1'))
 
-model_relu.add(Dense(150))
+model_relu.add(Dense(150, kernel_initializer=initializer))
 model_relu.add(Activation('relu', name='Relu_2'))
 
-model_relu.add(Dense(4))
+model_relu.add(Dense(4, kernel_initializer=initializer))
 model_relu.add(Activation('softmax'))
 #----------------------------------------------------------------------------------------
 
@@ -382,10 +382,10 @@ new_a_model = Sequential()
 new_a_model.add(Dense(300, input_shape=(1024,), kernel_initializer=initializer))
 new_a_model.add(LeakyReLU())
 new_a_model.add(BatchNormalization())
-new_a_model.add(Dense(150))
+new_a_model.add(Dense(150, kernel_initializer=initializer))
 new_a_model.add(LeakyReLU())
 new_a_model.add(BatchNormalization())
-new_a_model.add(Dense(4))
+new_a_model.add(Dense(4, kernel_initializer=initializer))
 new_a_model.add(Activation('softmax'))
 #---------------------------------------------------------------------------------------
 
